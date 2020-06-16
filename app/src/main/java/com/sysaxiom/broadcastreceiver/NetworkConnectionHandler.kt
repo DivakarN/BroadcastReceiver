@@ -10,6 +10,10 @@ import android.util.Log
 import android.widget.Toast
 import org.greenrobot.eventbus.EventBus
 import java.util.HashSet
+import android.content.BroadcastReceiver.PendingResult
+import android.os.AsyncTask
+
+
 
 class NetworkConnectionHandler : BroadcastReceiver() {
 
