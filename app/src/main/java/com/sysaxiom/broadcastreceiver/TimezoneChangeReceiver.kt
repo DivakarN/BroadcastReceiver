@@ -14,9 +14,9 @@ class TimezoneChangeReceiver : BroadcastReceiver() {
         println(timezone)
 
         val actionString = intent.getAction()
-        if(actionString.equals("")){
+        if(actionString.equals("android.intent.action.BOOT_COMPLETED")){
             val pendingResult = goAsync()
-            println("onReceive: BOOT Adction")
+            println("onReceive: BOOT Action")
             Task(pendingResult, intent).execute()
         }
     }
