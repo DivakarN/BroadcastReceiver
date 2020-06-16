@@ -36,7 +36,42 @@ one is Static and the other Dynamic.
 If your app targets API level 26 or higher, you cannot use the manifest to declare a receiver for implicit broadcasts (broadcasts that do not target your app specifically), except for a few implicit broadcasts that are exempted from that restriction. In most cases, you can use scheduled jobs instead.
 That means if you really need broadcast receiver then you should dynamically register and unregister it by code
 
+class TimezoneChangeReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        val timezone = intent.getStringExtra("time-zone")
+        println(timezone)
+    }
+}
+
+<receiver
+    android:name=".TimezoneChangeReceiver"
+    android:enabled="true"
+    android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+    </intent-filter>
+</receiver>
+
+
 2) Dynamic: Use Context.registerReceiver () method to dynamically register an instance.
+
+private var timezoneChangeReceiver = TimezoneChangeReceiver()
+
+override fun onStart() {
+    try {
+        val filter = IntentFilter()
+        filter.addAction("android.intent.action.TIMEZONE_CHANGED") //or any intent filter you want
+        registerReceiver(timezoneChangeReceiver, filter)
+    } catch (e: Exception) {
+        Log.d("NetworkHandler", e.toString())
+    }
+    super.onStart()
+}
+
+override fun onDestroy() {
+    super.onDestroy()
+    unregisterReceiver(networkConnectionHandler)
+}
 
 Difference:
 -----------
