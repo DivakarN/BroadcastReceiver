@@ -16,14 +16,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        try {
-            val filter = IntentFilter()
-            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE") //or any intent filter you want
-            registerReceiver(networkConnectionHandler, filter)
-        } catch (e: Exception) {
-            Log.d("NetworkHandler", e.toString())
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -32,17 +24,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
+        try {
+            val filter = IntentFilter()
+            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE") //or any intent filter you want
+            registerReceiver(networkConnectionHandler, filter)
+        } catch (e: Exception) {
+            Log.d("NetworkHandler", e.toString())
+        }
+
         EventBus.getDefault().register(this)
         super.onStart()
     }
 
-    override fun onStop() {
-        EventBus.getDefault().unregister(this)
-        super.onStop()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
+        EventBus.getDefault().unregister(this)
         unregisterReceiver(networkConnectionHandler)
     }
 }
